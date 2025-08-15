@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/13 12:15:20 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/15 15:16:57 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include <limits.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int	check_input(int argc, char **argv)
 {
@@ -21,7 +22,7 @@ int	check_input(int argc, char **argv)
 	int	num;
 
 	if (argc < 5 || argc > 6)
-		return (printf("Wrong amount of arguments\n"), 1);
+		return (printf("Wrong amount of arguments\n"), 0);
 	i = 1;
 	while (i < argc)
 	{
@@ -37,14 +38,14 @@ int	check_input(int argc, char **argv)
 
 void	init_philos(t_philo *phil, char **argv)
 {
-	int	i;
 	int	amount;
+	int	i;
 
-	i = 1;
+	i = 0;
 	amount = my_atoi(argv[1]);
 	while (i < amount)
 	{
-		phil[i].id = i;
+		phil[i].id = i + 1;
 		phil[i].nbr_of_philos = my_atoi(argv[1]);
 		phil[i].time_to_die = my_atoi(argv[2]);
 		phil[i].time_to_eat = my_atoi(argv[3]);
@@ -58,13 +59,32 @@ void	init_philos(t_philo *phil, char **argv)
 	}
 }
 
+void	init_forks(pthread_mutex_t *fork, char **argv)
+{
+	int	amount;
+	int	i;
+
+	i = 0;
+	amount = my_atoi(argv[1]);
+	while (i < amount)
+	{
+		pthread_mutex_init(&fork[i], NULL);
+		i++;
+	}
+	printf("Made %i forks\n", i);
+}
+
 
 int main(int argc, char **argv)
 {
-	t_philo	phil[200];
+	t_philo			phil[MAX_PHILS];
+	pthread_mutex_t	fork[MAX_PHILS];
 
 	if (!check_input(argc, argv))
-		return (1);
+		return (printf("uh-oh\n"), 1);
 	init_philos(phil, argv);
+	init_forks(fork, argv);
+
 	printf("ye\n");
+
 }
