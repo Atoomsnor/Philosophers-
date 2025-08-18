@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/18 13:20:17 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/18 15:40:59 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,16 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nbr_times_to_eat;
+	size_t			time_born;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 }	t_philo;
 
 
 
-int	my_atoi(const char *nptr);
+int		my_atoi(const char *nptr);
+size_t		get_time(void);
+void	print_message(t_philo *phil, char *action);
+void	ft_usleep(size_t time);
 
 #endif

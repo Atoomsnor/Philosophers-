@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/18 13:49:50 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/18 15:55:35 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	init_philos(t_philo *phil, pthread_mutex_t *fork, char **argv, int amount)
 			phil[i].nbr_times_to_eat = my_atoi(argv[5]);
 		else
 			phil[i].nbr_times_to_eat = 0;
+		phil[i].time_born = get_time();
 		phil[i].l_fork = &fork[i];
 		if (amount == 1) //only 1 philo means no rightfork
 			phil[i].r_fork = NULL;
@@ -70,8 +71,8 @@ void	init_philos(t_philo *phil, pthread_mutex_t *fork, char **argv, int amount)
 			phil[i].r_fork = &fork[amount - 1];
 		else
 			phil[i].r_fork = &fork[i - 1];
-		printf("%d %d %d %d %d %d\n", phil[i].id, phil[i].nbr_of_philos, phil[i].time_to_die, phil[i].time_to_eat,
-			phil[i].time_to_sleep, phil[i].nbr_times_to_eat);
+		// printf("%d %d %d %d %d %d\n", phil[i].id, phil[i].nbr_of_philos, phil[i].time_to_die, phil[i].time_to_eat,
+		// 	phil[i].time_to_sleep, phil[i].nbr_times_to_eat);
 		i++;
 	}
 }
@@ -82,7 +83,22 @@ void	*phil_routine(void *pointer)
 	
 	phil = (t_philo *)pointer;
 	//get time here or main?
+	if (phil->id % 2 == 0)
+		ft_usleep(1);
 	printf("bigphil nr: %d is going\n", phil->id);
+	//fork
+	pthread_mutex_lock(phil->l_fork);
+	print_message(phil, "has taken a fork");
+	pthread_mutex_lock(phil->r_fork);
+	print_message(phil, "has taken a fork");
+	ft_usleep(phil->time_to_eat); //stole this from some rando
+	//eat
+	//sleep
+	//think
+	//die?
+	//unlock
+	pthread_mutex_unlock(phil->l_fork);
+	pthread_mutex_unlock(phil->r_fork);
 	return (pointer);
 }
 
