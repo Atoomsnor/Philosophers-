@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/18 15:55:40 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/19 15:28:20 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <unistd.h>
 
-int	my_atoi(const char *nptr)
+long	my_atol(const char *nptr)
 {
-	int	result;
-	int	parity;
-	int	i;
+	long	result;
+	int		parity;
+	int		i;
 
 	result = 0;
 	parity = 1;
@@ -38,6 +38,8 @@ int	my_atoi(const char *nptr)
 		result = result * 10 + (nptr[i] - '0');
 		i++;
 	}
+	if (!(nptr[i] == '\0') && !(nptr[i] == ' '))
+		return (0);
 	return (result * parity);
 }
 

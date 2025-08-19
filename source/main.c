@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/18 15:55:35 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/19 16:39:14 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	check_input(int argc, int amount)
 {
 	int	i;
 
+	//check for negative imput
 	if (argc < 5 || argc > 6)
 		return (printf("Wrong amount of arguments\n"), 0);
 	i = 1;
@@ -56,14 +57,16 @@ void	init_philos(t_philo *phil, pthread_mutex_t *fork, char **argv, int amount)
 	{
 		phil[i].id = i + 1;
 		phil[i].nbr_of_philos = amount;
-		phil[i].time_to_die = my_atoi(argv[2]);
-		phil[i].time_to_eat = my_atoi(argv[3]);
-		phil[i].time_to_sleep = my_atoi(argv[4]);
+		phil[i].time_to_die = my_atol(argv[2]);
+		phil[i].time_to_eat = my_atol(argv[3]);
+		phil[i].time_to_sleep = my_atol(argv[4]);
 		if (argv[5])
-			phil[i].nbr_times_to_eat = my_atoi(argv[5]);
+			phil[i].nbr_times_to_eat = my_atol(argv[5]);
 		else
 			phil[i].nbr_times_to_eat = 0;
+		phil[i].times_eaten = 0;
 		phil[i].time_born = get_time();
+		phil[i].last_eaten = phil[i].time_born;
 		phil[i].l_fork = &fork[i];
 		if (amount == 1) //only 1 philo means no rightfork
 			phil[i].r_fork = NULL;
@@ -82,23 +85,38 @@ void	*phil_routine(void *pointer)
 	t_philo	*phil;
 	
 	phil = (t_philo *)pointer;
-	//get time here or main?
-	if (phil->id % 2 == 0)
-		ft_usleep(1);
-	printf("bigphil nr: %d is going\n", phil->id);
-	//fork
-	pthread_mutex_lock(phil->l_fork);
-	print_message(phil, "has taken a fork");
-	pthread_mutex_lock(phil->r_fork);
-	print_message(phil, "has taken a fork");
-	ft_usleep(phil->time_to_eat); //stole this from some rando
-	//eat
-	//sleep
-	//think
-	//die?
-	//unlock
-	pthread_mutex_unlock(phil->l_fork);
-	pthread_mutex_unlock(phil->r_fork);
+	//put all of this shit in a while loop that keeps going till everything dies
+	while (1) //check if someone dies
+	{
+		// if (phil->time_to_die <= (get_time() - phil->last_eaten))
+		// 	return (printf("bigphil nr: %d died\n", phil->id), pointer);
+		// if (phil->nbr_times_to_eat > 0 && phil->times_eaten >= phil->nbr_times_to_eat)
+		// 	return (printf("bigphil nr: %d finished eatin\n", phil->id), pointer);
+		if (phil->id % 2 == 0)
+			ft_usleep(1);
+		printf("bigphil nr: %d is going\n", phil->id);
+		//fork
+		pthread_mutex_lock(phil->l_fork);
+		print_message(phil, "has taken a fork");
+		pthread_mutex_lock(phil->r_fork);
+		print_message(phil, "has taken a fork");
+		//eat
+		print_message(phil, "is eating");
+		ft_usleep(phil->time_to_eat); //stole this from some rando
+		phil->last_eaten = get_time();
+		phil->times_eaten++;
+		pthread_mutex_unlock(phil->l_fork);
+		pthread_mutex_unlock(phil->r_fork);
+		//sleep
+		print_message(phil, "is sleeping");
+		ft_usleep(phil->time_to_sleep); //stole this from some rando
+		//think
+		print_message(phil, "is thinking");
+		//die?
+		//unlock
+
+		printf("bigphil nr: %d is done\n", phil->id);
+	}
 	return (pointer);
 }
 
@@ -129,12 +147,12 @@ int main(int argc, char **argv)
 
 	int	amount;
 
-	amount = my_atoi(argv[1]);
+	amount = my_atol(argv[1]);
 	if (!check_input(argc, amount))
 		return (printf("uh-oh\n"), 1);
 	init_forks(fork, amount); //we now need to clean forks
 	init_philos(phil, fork, argv, amount); //we now need to clean phil and forks
 	init_threads(phil, amount); //something can go wrong here so clean phil and forks,
 	// printf("Die funciton goes here\n") //clean phil/forks and threads??? or time????
-	printf("ye\n");
+	// printf("ye\n");
 }
