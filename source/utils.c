@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/19 15:28:20 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:35:26 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,3 @@ void	print_message(t_philo *phil, char *action)
 	printf("%zu %i %s\n", time, phil->id, action);
 }
 
-void	ft_usleep(size_t time) //unsure
-{
-	size_t	start;
-
-	start = get_time();
-	while (get_time() - start < time)
-		usleep(500);
-}

@@ -6,11 +6,12 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/19 15:50:27 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:48:55 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <pthread.h>
+#include <stdbool.h>
 
 #ifndef PHILO_H
 # define PHILO_H
@@ -33,11 +34,19 @@ typedef struct	s_philo
 	pthread_mutex_t	*r_fork;
 }	t_philo;
 
+typedef struct	s_monitor
+{
+	
+	bool		if_died;
+	size_t		time_to_die;
+	t_philo		*philos;
+}	t_monitor;
+
 
 
 long		my_atol(const char *nptr);
 size_t		get_time(void);
 void	print_message(t_philo *phil, char *action);
-void	ft_usleep(size_t time);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/19 16:39:14 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/20 17:00:15 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,14 @@ void	*phil_routine(void *pointer)
 	
 	phil = (t_philo *)pointer;
 	//put all of this shit in a while loop that keeps going till everything dies
-	while (1) //check if someone dies
-	{
+	//while (1)
+	//{
 		// if (phil->time_to_die <= (get_time() - phil->last_eaten))
 		// 	return (printf("bigphil nr: %d died\n", phil->id), pointer);
 		// if (phil->nbr_times_to_eat > 0 && phil->times_eaten >= phil->nbr_times_to_eat)
 		// 	return (printf("bigphil nr: %d finished eatin\n", phil->id), pointer);
 		if (phil->id % 2 == 0)
-			ft_usleep(1);
+			usleep(phil->time_to_eat * 500);
 		printf("bigphil nr: %d is going\n", phil->id);
 		//fork
 		pthread_mutex_lock(phil->l_fork);
@@ -102,29 +102,33 @@ void	*phil_routine(void *pointer)
 		print_message(phil, "has taken a fork");
 		//eat
 		print_message(phil, "is eating");
-		ft_usleep(phil->time_to_eat); //stole this from some rando
+		usleep(phil->time_to_eat * 1000);
 		phil->last_eaten = get_time();
 		phil->times_eaten++;
 		pthread_mutex_unlock(phil->l_fork);
 		pthread_mutex_unlock(phil->r_fork);
 		//sleep
 		print_message(phil, "is sleeping");
-		ft_usleep(phil->time_to_sleep); //stole this from some rando
+		usleep(phil->time_to_sleep * 1000); 
 		//think
 		print_message(phil, "is thinking");
 		//die?
 		//unlock
 
 		printf("bigphil nr: %d is done\n", phil->id);
-	}
+	//}
 	return (pointer);
 }
 
 void	init_threads(t_philo *phil, int amount)
 {
+	t_monitor	*monitor;
 	int	i;
 
+	monitor = malloc(sizeof(t_monitor *));
+	monitor->philos = phil;
 	i = 0;
+	//make thread for monitor
 	while (i < amount)
 	{
 		if (pthread_create(&phil[i].thread, NULL, phil_routine, &phil[i]) != 0)
