@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/20 16:48:55 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/22 17:15:50 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,32 @@ typedef struct	s_philo
 	int				times_eaten;
 	size_t			time_born;
 	size_t			last_eaten;
+	bool			if_died;
+	bool			all_eaten;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 }	t_philo;
 
 typedef struct	s_monitor
 {
-	
-	bool		if_died;
+	pthread_t	thread;
 	size_t		time_to_die;
 	t_philo		*philos;
 }	t_monitor;
 
+//	*init*	//
+void	init_forks(pthread_mutex_t *fork, int amount);
+void	init_monitor(t_monitor *monitor, t_philo *phil);
+void	init_philos(t_philo *phil, pthread_mutex_t *fork, char **argv, int amount);
+void	init_threads(t_monitor *monitor, t_philo *phil, int amount);
 
+//	*routine*	//
+void	*monitor_routine(void *pointer);
+void	*phil_routine(void *pointer);
 
-long		my_atol(const char *nptr);
-size_t		get_time(void);
+//	*utils*	//
+long	my_atol(const char *nptr);
+size_t	get_time(void);
 void	print_message(t_philo *phil, char *action);
 
 

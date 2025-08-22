@@ -6,7 +6,7 @@
 #    By: roversch <roversch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/13 10:07:28 by roversch          #+#    #+#              #
-#    Updated: 2025/08/13 11:13:48 by roversch         ###   ########.fr        #
+#    Updated: 2025/08/22 16:30:22 by roversch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC_DIR		= source
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC			= main.c utils.c
+SRC			= main.c init.c routine.c utils.c
 OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
