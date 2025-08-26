@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/22 17:15:50 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/26 16:38:37 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,28 @@ typedef struct	s_philo
 	int				times_eaten;
 	size_t			time_born;
 	size_t			last_eaten;
-	bool			if_died;
-	bool			all_eaten;
+	bool			*dead;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*eat_lock;
+	pthread_mutex_t	*dead_lock;
 }	t_philo;
 
 typedef struct	s_monitor
 {
 	pthread_t	thread;
-	size_t		time_to_die;
+	int			amount;
+	bool		dead;
+	pthread_mutex_t	dead_lock;
+	pthread_mutex_t	eat_lock;
 	t_philo		*philos;
 }	t_monitor;
 
 //	*init*	//
-void	init_forks(pthread_mutex_t *fork, int amount);
-void	init_monitor(t_monitor *monitor, t_philo *phil);
-void	init_philos(t_philo *phil, pthread_mutex_t *fork, char **argv, int amount);
-void	init_threads(t_monitor *monitor, t_philo *phil, int amount);
+void	init_forks(t_monitor *monitor, pthread_mutex_t *fork);
+void	init_monitor(t_monitor *monitor, t_philo *phil, char **argv);
+void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char **argv);
+void	init_threads(t_monitor *monitor, t_philo *phil);
 
 //	*routine*	//
 void	*monitor_routine(void *pointer);
