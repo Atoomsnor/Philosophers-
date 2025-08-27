@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/26 16:39:54 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:43:38 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_input(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (i == 1 && (amount < 1 || amount > 200 ))
+		if (i == 1 && (amount < 1 || amount > 200))
 			return (printf("Argument error\n"), 0);
 		else if (i != 1 && i != 5 && (amount < 1 || amount > INT_MAX))
 			return (printf("Argument error2\n"), 0);
@@ -37,7 +37,7 @@ int	check_input(int argc, char **argv)
 	return (1);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_monitor		monitor;
 	t_philo			phil[MAX_PHILS];
@@ -50,5 +50,4 @@ int main(int argc, char **argv)
 	init_philos(&monitor, phil, fork, argv); //we now need to clean phil and forks
 	init_threads(&monitor, phil); //something can go wrong here so clean phil and forks,
 	// printf("Die funciton goes here\n") //clean phil/forks and threads??? or time????
-	// printf("ye\n");
 }

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 14:22:16 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:43:43 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void	print_message(t_philo *phil, char *action)
 	{
 		pthread_mutex_lock(phil->print_lock);
 		time = get_time() - phil->time_born;
-		printf("%zu %i %s\n", time, phil->id, action);
+		if (*phil->dead == false)
+			printf("%zu %i %s\n", time, phil->id, action);
 		pthread_mutex_unlock(phil->print_lock);
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 13:57:31 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:56:35 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	init_monitor(t_monitor *monitor, t_philo *phil, char **argv)
 	pthread_mutex_init(&monitor->print_lock, NULL);
 }
 
-void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char **argv)
+void	init_philos(t_monitor *monitor, t_philo *phil,
+			pthread_mutex_t *fork, char **argv)
 {
 	int	i;
 
@@ -79,8 +80,7 @@ void	init_threads(t_monitor *monitor, t_philo *phil)
 
 	i = 0;
 	if (pthread_create(&monitor->thread, NULL, monitor_routine, monitor) != 0)
-			printf("Die funciton goes here\n");
-	
+		printf("Die funciton goes here\n");
 	while (i < monitor->amount)
 	{
 		if (pthread_create(&phil[i].thread, NULL, phil_routine, &phil[i]) != 0)
@@ -89,7 +89,7 @@ void	init_threads(t_monitor *monitor, t_philo *phil)
 	}
 	i = 0;
 	if (pthread_join(monitor->thread, NULL) != 0)
-			printf("Die funciton goes here\n");
+		printf("Die funciton goes here\n");
 	while (i < monitor->amount)
 	{
 		if (pthread_join(phil[i].thread, NULL) != 0)

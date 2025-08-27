@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:27:37 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 13:29:25 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 15:56:53 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,21 @@ int	eat_check(t_philo *philos)
 
 int	dead_check(t_philo *philos)
 {
-	(void)philos;
+	int	i;
+
+	i = 0;
+	while (philos[i].nbr_of_philos > i)
+	{
+		if (get_time() - philos[i].last_eaten >= philos[i].time_to_die)
+		{
+			pthread_mutex_lock(philos[0].dead_lock);
+			print_message(&philos[i], "died");
+			*philos->dead = true;
+			pthread_mutex_unlock(philos[0].dead_lock);
+			return (1);
+		}
+		i++;
+	}
 	return (0);
 }
 
