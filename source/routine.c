@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:27:47 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 14:04:05 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 14:20:49 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ int	if_dead(t_philo *phil)
 void	phil_eats(t_philo *phil)
 {
 	pthread_mutex_lock(phil->l_fork);
-	print_fork(phil);
+	print_message(phil, "has taken a fork");
 	pthread_mutex_lock(phil->r_fork);
-	print_fork(phil);
+	print_message(phil, "has taken a fork");
 	pthread_mutex_lock(phil->eat_lock);
-	print_eating(phil);
+	print_message(phil, "is eating");
 	phil->last_eaten = get_time();
 	phil->times_eaten++;
 	pthread_mutex_unlock(phil->eat_lock);
@@ -47,13 +47,13 @@ void	phil_eats(t_philo *phil)
 
 void	phil_sleeps(t_philo *phil)
 {
-	print_sleeping(phil);
+	print_message(phil, "is sleeping");
 	usleep(phil->time_to_sleep * 1000); 
 }
 
 void	phil_thinks(t_philo *phil)
 {
-	print_thinking(phil);
+	print_message(phil, "is thinking");
 }
 
 void	*phil_routine(void *pointer)

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 14:00:30 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 14:21:53 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,6 @@ long	my_atol(const char *nptr);
 size_t	get_time(void);
 void	print_message(t_philo *phil, char *action);
 
-//	*print*	//
-void	print_fork(t_philo *phil);
-void	print_eating(t_philo *phil);
-void	print_sleeping(t_philo *phil);
-void	print_thinking(t_philo *phil);
-void	print_died(t_philo *phil);
 
 
 #endif
