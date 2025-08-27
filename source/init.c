@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/26 16:41:06 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 13:57:31 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	init_monitor(t_monitor *monitor, t_philo *phil, char **argv)
 	monitor->philos = phil;
 	monitor->amount = my_atol(argv[1]);
 	monitor->dead = false; //maybe not needed?
-	pthread_mutex_init(&monitor->dead_lock, NULL);
 	pthread_mutex_init(&monitor->eat_lock, NULL);
+	pthread_mutex_init(&monitor->dead_lock, NULL);
+	pthread_mutex_init(&monitor->print_lock, NULL);
 }
 
 void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char **argv)
@@ -65,10 +66,9 @@ void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char 
 			phil[i].r_fork = &fork[monitor->amount - 1];
 		else
 			phil[i].r_fork = &fork[i - 1];
-		phil[i].dead_lock = &monitor->dead_lock;
 		phil[i].eat_lock = &monitor->eat_lock;
-		// printf("%d %d %d %d %d %d\n", phil[i].id, phil[i].nbr_of_philos, phil[i].time_to_die, phil[i].time_to_eat,
-		// 	phil[i].time_to_sleep, phil[i].nbr_times_to_eat);
+		phil[i].dead_lock = &monitor->dead_lock;
+		phil[i].print_lock = &monitor->print_lock;
 		i++;
 	}
 }

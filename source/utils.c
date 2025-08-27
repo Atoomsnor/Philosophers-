@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/20 16:35:26 by roversch         ###   ########.fr       */
+/*   Updated: 2025/08/27 12:49:45 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	print_message(t_philo *phil, char *action)
 	size_t	time;
 
 	time = get_time() - phil->time_born;
-	printf("%zu %i %s\n", time, phil->id, action);
+	if (!*phil->dead)
+		printf("%zu %i %s\n", time, phil->id, action);
 }
 

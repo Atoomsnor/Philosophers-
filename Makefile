@@ -6,25 +6,27 @@
 #    By: roversch <roversch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/13 10:07:28 by roversch          #+#    #+#              #
-#    Updated: 2025/08/22 16:30:22 by roversch         ###   ########.fr        #
+#    Updated: 2025/08/27 14:01:30 by roversch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-OBJ_DIR		= obj
-SRC_DIR		= source
+SRC		= main.c init.c monitor.c routine.c utils.c print_message.c
+SRC_DIR	= source
+
+
+OBJ		= $(SRC:%.c=$(OBJ_DIR)/%.o)
+OBJ_DIR	= objects
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC			= main.c init.c routine.c utils.c
-OBJ			= $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -L. $(MSFLAGS) $(CFLAGS) -o $(NAME)
+	$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
@@ -34,11 +36,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 
 clean:
 	rm -rf $(OBJ_DIR)
-	$(MAKE) -C clean
 
 fclean: clean
 	rm -f $(NAME)
-	$(MAKE) -C fclean
 	
 re: fclean all
 
