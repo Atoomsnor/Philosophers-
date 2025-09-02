@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 14:21:53 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/02 13:52:08 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char 
 void	init_threads(t_monitor *monitor, t_philo *phil);
 
 //	*routine*	//
+int	if_dead(t_philo *phil);
 void	*monitor_routine(void *pointer);
 void	*phil_routine(void *pointer);
 

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:27:47 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 16:01:24 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/02 20:14:22 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,29 @@ int	if_dead(t_philo *phil)
 	return (pthread_mutex_unlock(phil->dead_lock), 0);
 }
 
-void	phil_eats(t_philo *phil)
+// fork_1 fork_2
+
+// philo_1 l_fork == fork_1 r_fork == fork_2
+// philo_2 l_fork == fork_2 r_fork == fork_1
+
+
+
+void phil_eats(t_philo *phil)
 {
-	pthread_mutex_lock(phil->l_fork);
-	print_message(phil, "has taken a fork");
-	if (phil->nbr_of_philos == 1)
+	if (phil->l_fork < phil->r_fork)
 	{
-		usleep(phil->time_to_die);
-		pthread_mutex_unlock(phil->l_fork);
-		return ;
+		pthread_mutex_lock(phil->l_fork);
+		print_message(phil, "has taken a fork");
+		pthread_mutex_lock(phil->r_fork);
+		print_message(phil, "has taken a fork");
 	}
-	pthread_mutex_lock(phil->r_fork);
-	print_message(phil, "has taken a fork");
+	else if (phil->r_fork < phil->l_fork)
+	{
+		pthread_mutex_lock(phil->r_fork);
+		print_message(phil, "has taken a fork");
+		pthread_mutex_lock(phil->l_fork);
+		print_message(phil, "has taken a fork");
+	}
 	pthread_mutex_lock(phil->eat_lock);
 	print_message(phil, "is eating");
 	phil->last_eaten = get_time();
@@ -49,6 +60,7 @@ void	phil_eats(t_philo *phil)
 	pthread_mutex_unlock(phil->l_fork);
 	pthread_mutex_unlock(phil->r_fork);
 }
+
 
 void	phil_sleeps(t_philo *phil)
 {
@@ -66,16 +78,22 @@ void	*phil_routine(void *pointer)
 	t_philo	*phil;
 	
 	phil = (t_philo *)pointer;
-	phil->time_born = get_time();
+	if (phil->nbr_of_philos == 1)
+	{
+		printf("ye\n");
+		pthread_mutex_lock(phil->l_fork);
+		print_message(phil, "has taken a fork");
+		usleep(phil->time_to_die);
+		pthread_mutex_unlock(phil->l_fork);
+		return (pointer);
+	}
 	if (phil->id % 2 == 0)
-			usleep(phil->time_to_eat * 500);
+		usleep(phil->time_to_eat * 500);
 	while (!if_dead(phil))
 	{
-		// printf("bigphil nr: %d is going\n", phil->id);
 		phil_eats(phil);
 		phil_sleeps(phil);
 		phil_thinks(phil);
-		// printf("bigphil nr: %d is done\n", phil->id);
 	}
 	return (pointer);
 }

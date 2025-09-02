@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 15:43:38 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/02 11:54:23 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,34 @@ int	check_input(int argc, char **argv)
 	return (1);
 }
 
-int	main(int argc, char **argv)
+void	destroy_all(t_monitor *monitor, pthread_mutex_t *fork)
 {
-	t_monitor		monitor;
-	t_philo			phil[MAX_PHILS];
-	pthread_mutex_t	fork[MAX_PHILS];
-
-	if (!check_input(argc, argv))
-		return (printf("uh-oh\n"), 1);
-	init_monitor(&monitor, phil, argv);
-	init_forks(&monitor, fork); //we now need to clean forks
-	init_philos(&monitor, phil, fork, argv); //we now need to clean phil and forks
-	init_threads(&monitor, phil); //something can go wrong here so clean phil and forks,
-	// printf("Die funciton goes here\n") //clean phil/forks and threads??? or time????
+	//add levels so u clean certian things at certain points
+	int	i;
+	
+	pthread_mutex_destroy(&monitor->eat_lock);
+	pthread_mutex_destroy(&monitor->dead_lock);
+	pthread_mutex_destroy(&monitor->print_lock);
+	i = 0;
+	while (i < monitor->amount)//add amount of forks so it can handle mid innit
+	{
+		pthread_mutex_destroy(&fork[i]);
+		i++;
+	}
 }
+
+int	main(int argc, char **argv)
+	{
+		t_monitor		monitor;
+		t_philo			phil[MAX_PHILS];
+		pthread_mutex_t	fork[MAX_PHILS];
+	
+		if (!check_input(argc, argv))
+			return (printf("uh-oh\n"), 1);
+		init_monitor(&monitor, phil, argv);
+		init_forks(&monitor, fork); //we now need to clean forks
+		init_philos(&monitor, phil, fork, argv); //we now need to clean phil and forks
+		init_threads(&monitor, phil); //something can go wrong here so clean phil and forks,
+		destroy_all(&monitor, fork);
+		// printf("Die funciton goes here\n") //clean phil/forks and threads??? or time????
+	}

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:27:37 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 15:56:53 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:29:45 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,42 @@ int	eat_check(t_philo *philos)
 	i = 0;
 	done = 0;
 	if (philos[0].nbr_times_to_eat == -1)
-		return (1);
+		return (0);
 	while (philos[0].nbr_of_philos > i)
 	{
+		pthread_mutex_lock(philos[i].eat_lock);
 		if (philos[i].times_eaten >= philos[i].nbr_times_to_eat)
-		{
 			done++;
-		}
+		pthread_mutex_unlock(philos[i].eat_lock);
 		i++;
 	}
 	if (done == philos[0].nbr_of_philos)
 	{
 		pthread_mutex_lock(philos[0].dead_lock);
+		printf("all done eating\n");
 		*philos->dead = true;
 		pthread_mutex_unlock(philos[0].dead_lock);
-		printf("all done eating\n");
 		return (1);
 	}
 	return (0);
+}
+
+int	meal_check(t_philo *philos)
+{
+	pthread_mutex_lock(philos->eat_lock);
+	if (get_time() - philos->last_eaten > philos->time_to_die)
+		return (pthread_mutex_unlock(philos->eat_lock), 1);
+	return (pthread_mutex_unlock(philos->eat_lock), 0);
+}
+
+void	print_dead(t_philo *philos)
+{
+	size_t	time;
+
+	// pthread_mutex_lock(philos->print_lock);
+	time = get_time() - philos->time_born;
+	printf("%zu %i died\n", time, philos->id);
+	// pthread_mutex_unlock(philos->print_lock);
 }
 
 int	dead_check(t_philo *philos)
@@ -52,10 +70,11 @@ int	dead_check(t_philo *philos)
 	i = 0;
 	while (philos[i].nbr_of_philos > i)
 	{
-		if (get_time() - philos[i].last_eaten >= philos[i].time_to_die)
+		if (meal_check(&philos[i]) == 1)
 		{
 			pthread_mutex_lock(philos[0].dead_lock);
-			print_message(&philos[i], "died");
+			print_dead(&philos[i]);
+			// print_message(&philos[i], "died");
 			*philos->dead = true;
 			pthread_mutex_unlock(philos[0].dead_lock);
 			return (1);
@@ -64,6 +83,7 @@ int	dead_check(t_philo *philos)
 	}
 	return (0);
 }
+
 
 void	*monitor_routine(void *pointer)
 {

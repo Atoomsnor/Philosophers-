@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/08/27 15:56:35 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/02 19:26:58 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,20 @@ void	init_monitor(t_monitor *monitor, t_philo *phil, char **argv)
 	pthread_mutex_init(&monitor->print_lock, NULL);
 }
 
+void	init_input(t_philo *phil, char **argv)
+{
+
+		phil->time_to_die = my_atol(argv[2]);
+		phil->time_to_eat = my_atol(argv[3]);
+		phil->time_to_sleep = my_atol(argv[4]);
+		if (argv[5])
+			phil->nbr_times_to_eat = my_atol(argv[5]);
+		else
+			phil->nbr_times_to_eat = -1; // -1?
+}
+
 void	init_philos(t_monitor *monitor, t_philo *phil,
-			pthread_mutex_t *fork, char **argv)
+		pthread_mutex_t *fork, char **argv)
 {
 	int	i;
 
@@ -48,14 +60,8 @@ void	init_philos(t_monitor *monitor, t_philo *phil,
 	while (i < monitor->amount)
 	{
 		phil[i].id = i + 1;
+		init_input(&phil[i], argv);
 		phil[i].nbr_of_philos = monitor->amount;
-		phil[i].time_to_die = my_atol(argv[2]);
-		phil[i].time_to_eat = my_atol(argv[3]);
-		phil[i].time_to_sleep = my_atol(argv[4]);
-		if (argv[5])
-			phil[i].nbr_times_to_eat = my_atol(argv[5]);
-		else
-			phil[i].nbr_times_to_eat = -1; // -1?
 		phil[i].times_eaten = 0;
 		phil[i].time_born = get_time(); //maybe put on start of thread init
 		phil[i].last_eaten = phil[i].time_born;
