@@ -6,35 +6,45 @@
 #    By: roversch <roversch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/13 10:07:28 by roversch          #+#    #+#              #
-#    Updated: 2025/09/03 13:26:28 by roversch         ###   ########.fr        #
+#    Updated: 2025/09/03 17:19:01 by roversch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC		= main.c init.c monitor.c routine.c utils.c
-SRC_DIR	= source
+SRC		= main.c init.c monitor.c routine.c reaper.c string_utils.c systime.c
+SRC_DIR	= source/ source/utils/
+VPATH	= $(SRC_DIR)
 
+DEP_DIR		= dependencies/
+DEPFLAGS	= -MM -MF $@ -MT $@ -MT $(OBJ_DIR)$(addsuffix .o,$(notdir $(basename $<)))
 
-OBJ		= $(SRC:%.c=$(OBJ_DIR)/%.o)
-OBJ_DIR	= objects
+OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
+OBJ_DIR	= objects/
+
+INCLUDES = include/
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror $(addprefix -I,. $(INCLUDES))
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
 
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
+include $(addprefix $(DEP_DIR), $(SRC:%.c=%.d))
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+%/:
+	mkdir -p $@
+
+$(DEP_DIR)%.d : %.c | $(DEP_DIR)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEPFLAGS) $<
+
+$(OBJ_DIR)%.o: %.c | $(OBJ_DIR)
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) $(DEP_DIR)
 
 fclean: clean
 	rm -f $(NAME)
@@ -42,3 +52,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+.PRECIOUS : $(OBJ_DIR) $(DEP_DIR)

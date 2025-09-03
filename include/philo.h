@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 13:25:09 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:21:32 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,14 @@ int		main(int argc, char **argv);
 //	*init*	//
 
 void	init_forks(t_monitor *monitor, pthread_mutex_t *fork);
+/** 
+ * Sets up the monitor struct with flags and the mutex locks
+ * @param monitor struct containing the configuration of the program
+ * @param phil array of philosophers
+ * @param fork array of mutexes (forks)
+ * @param argv program arguments
+ * @return never returns
+ */
 void	init_monitor(t_monitor *monitor, t_philo *phil,
 			pthread_mutex_t *fork, char **argv);
 void	init_philos(t_monitor *monitor, t_philo *phil,
@@ -71,11 +79,19 @@ int		if_dead(t_philo *phil);
 
 //	*utils*	//
 
-long	my_atol(const char *nptr);
+// reaper
+
 void	error_and_exit(char *error_msg, int exitcode);
 void	destroy_all(t_monitor *monitor, int amount,
 			char *error_msg, int exitcode);
-size_t	get_time(void);
+
+// string_utils
+
+long	my_atol(const char *nptr);
 void	print_message(t_philo *phil, char *action);
+
+// systime
+
+size_t	get_time(void);
 
 #endif

@@ -6,11 +6,11 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 13:17:33 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:11:57 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "philo.h"
 #include <pthread.h>
 #include <limits.h>
 #include <stdio.h>
@@ -31,7 +31,6 @@ void	init_forks(t_monitor *monitor, pthread_mutex_t *fork)
 	}
 }
 
-//Sets up the monitor struct with flags and the mutex locks
 void	init_monitor(t_monitor *monitor, t_philo *phil,
 			pthread_mutex_t *fork, char **argv)
 {

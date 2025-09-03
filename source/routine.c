@@ -6,11 +6,11 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:27:47 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 12:09:26 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:31:11 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "philo.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
