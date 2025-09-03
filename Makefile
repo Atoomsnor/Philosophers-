@@ -6,7 +6,7 @@
 #    By: roversch <roversch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/13 10:07:28 by roversch          #+#    #+#              #
-#    Updated: 2025/09/02 20:13:31 by roversch         ###   ########.fr        #
+#    Updated: 2025/09/03 13:26:28 by roversch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,6 @@ OBJ_DIR	= objects
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-# CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=thread
-
 
 all: $(NAME)
 

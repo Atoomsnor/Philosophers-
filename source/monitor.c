@@ -6,18 +6,17 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:27:37 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/02 19:29:45 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:24:29 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 #include <pthread.h>
-#include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
-int	eat_check(t_philo *philos)
+//Looks if all philos have eaten, sets dead flag
+static int	all_eaten_check(t_philo *philos)
 {
 	int	i;
 	int	done;
@@ -37,7 +36,6 @@ int	eat_check(t_philo *philos)
 	if (done == philos[0].nbr_of_philos)
 	{
 		pthread_mutex_lock(philos[0].dead_lock);
-		printf("all done eating\n");
 		*philos->dead = true;
 		pthread_mutex_unlock(philos[0].dead_lock);
 		return (1);
@@ -45,7 +43,8 @@ int	eat_check(t_philo *philos)
 	return (0);
 }
 
-int	meal_check(t_philo *philos)
+//Looks if last_eaten time is greater then time to die
+static int	last_eaten_check(t_philo *philos)
 {
 	pthread_mutex_lock(philos->eat_lock);
 	if (get_time() - philos->last_eaten > philos->time_to_die)
@@ -53,29 +52,28 @@ int	meal_check(t_philo *philos)
 	return (pthread_mutex_unlock(philos->eat_lock), 0);
 }
 
-void	print_dead(t_philo *philos)
+//Prints dead flag without using mutexes
+static void	print_dead(t_philo *philos)
 {
 	size_t	time;
 
-	// pthread_mutex_lock(philos->print_lock);
 	time = get_time() - philos->time_born;
 	printf("%zu %i died\n", time, philos->id);
-	// pthread_mutex_unlock(philos->print_lock);
 }
 
-int	dead_check(t_philo *philos)
+//Looks to see if any philos starved, sets dead flag
+static int	starve_check(t_philo *philos)
 {
 	int	i;
 
 	i = 0;
 	while (philos[i].nbr_of_philos > i)
 	{
-		if (meal_check(&philos[i]) == 1)
+		if (last_eaten_check(&philos[i]) == 1)
 		{
 			pthread_mutex_lock(philos[0].dead_lock);
-			print_dead(&philos[i]);
-			// print_message(&philos[i], "died");
 			*philos->dead = true;
+			print_dead(&philos[i]);
 			pthread_mutex_unlock(philos[0].dead_lock);
 			return (1);
 		}
@@ -84,7 +82,7 @@ int	dead_check(t_philo *philos)
 	return (0);
 }
 
-
+//Catches the dead flag from eat and dead check
 void	*monitor_routine(void *pointer)
 {
 	t_monitor	*monitor;
@@ -92,10 +90,9 @@ void	*monitor_routine(void *pointer)
 	monitor = (t_monitor *)pointer;
 	while (1)
 	{
-		if (eat_check(monitor->philos) == 1 || dead_check(monitor->philos) == 1)
-		{
+		if (all_eaten_check(monitor->philos) == 1
+			|| starve_check(monitor->philos) == 1)
 			break ;
-		}
 		usleep(1000);
 	}
 	return (pointer);

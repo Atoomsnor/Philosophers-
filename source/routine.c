@@ -6,45 +6,35 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:27:47 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/02 20:14:22 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 12:09:26 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 #include <pthread.h>
-#include <limits.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 
+//Looks if the dead flag is set to true
 int	if_dead(t_philo *phil)
 {
 	pthread_mutex_lock(phil->dead_lock);
 	if (*phil->dead == true)
-	{
-		// printf("flagged true\n");
 		return (pthread_mutex_unlock(phil->dead_lock), 1);
-	}
 	return (pthread_mutex_unlock(phil->dead_lock), 0);
 }
 
-// fork_1 fork_2
-
-// philo_1 l_fork == fork_1 r_fork == fork_2
-// philo_2 l_fork == fork_2 r_fork == fork_1
-
-
-
-void phil_eats(t_philo *phil)
+//Locks and unlocks forks to eat, sleeps for time_to_eat
+static void	phil_eats(t_philo *phil)
 {
-	if (phil->l_fork < phil->r_fork)
+	if (phil->id % 2 == 0)
 	{
 		pthread_mutex_lock(phil->l_fork);
 		print_message(phil, "has taken a fork");
 		pthread_mutex_lock(phil->r_fork);
 		print_message(phil, "has taken a fork");
 	}
-	else if (phil->r_fork < phil->l_fork)
+	else
 	{
 		pthread_mutex_lock(phil->r_fork);
 		print_message(phil, "has taken a fork");
@@ -61,26 +51,27 @@ void phil_eats(t_philo *phil)
 	pthread_mutex_unlock(phil->r_fork);
 }
 
-
-void	phil_sleeps(t_philo *phil)
+//Sleeps for time_to_sleep
+static void	phil_sleeps(t_philo *phil)
 {
 	print_message(phil, "is sleeping");
 	usleep(phil->time_to_sleep * 1000);
 }
 
-void	phil_thinks(t_philo *phil)
+//Sends a message and acts as a queue before eating is possible
+static void	phil_thinks(t_philo *phil)
 {
 	print_message(phil, "is thinking");
 }
 
+//Main routine loop, keeps going untill a death
 void	*phil_routine(void *pointer)
 {
 	t_philo	*phil;
-	
+
 	phil = (t_philo *)pointer;
 	if (phil->nbr_of_philos == 1)
 	{
-		printf("ye\n");
 		pthread_mutex_lock(phil->l_fork);
 		print_message(phil, "has taken a fork");
 		usleep(phil->time_to_die);

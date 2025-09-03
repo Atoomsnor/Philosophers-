@@ -6,19 +6,19 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/02 13:52:08 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/03 13:25:09 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <pthread.h>
-#include <stdbool.h>
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <pthread.h>
+# include <stdbool.h>
+
 # define MAX_PHILS 200
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	pthread_t		thread;
 	int				id;
@@ -38,33 +38,44 @@ typedef struct	s_philo
 	pthread_mutex_t	*print_lock;
 }	t_philo;
 
-typedef struct	s_monitor
+typedef struct s_monitor
 {
-	pthread_t	thread;
-	int			amount;
-	bool		dead;
+	pthread_t		thread;
+	int				amount;
+	bool			dead;
 	pthread_mutex_t	eat_lock;
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	print_lock;
-	t_philo		*philos;
+	pthread_mutex_t	*forks;
+	t_philo			*philos;
 }	t_monitor;
 
+//	*main*	//
+
+int		main(int argc, char **argv);
+
 //	*init*	//
+
 void	init_forks(t_monitor *monitor, pthread_mutex_t *fork);
-void	init_monitor(t_monitor *monitor, t_philo *phil, char **argv);
-void	init_philos(t_monitor *monitor, t_philo *phil, pthread_mutex_t *fork, char **argv);
+void	init_monitor(t_monitor *monitor, t_philo *phil,
+			pthread_mutex_t *fork, char **argv);
+void	init_philos(t_monitor *monitor, t_philo *phil,
+			pthread_mutex_t *fork, char **argv);
 void	init_threads(t_monitor *monitor, t_philo *phil);
 
 //	*routine*	//
-int	if_dead(t_philo *phil);
+
 void	*monitor_routine(void *pointer);
 void	*phil_routine(void *pointer);
+int		if_dead(t_philo *phil);
 
 //	*utils*	//
+
 long	my_atol(const char *nptr);
+void	error_and_exit(char *error_msg, int exitcode);
+void	destroy_all(t_monitor *monitor, int amount,
+			char *error_msg, int exitcode);
 size_t	get_time(void);
 void	print_message(t_philo *phil, char *action);
-
-
 
 #endif
