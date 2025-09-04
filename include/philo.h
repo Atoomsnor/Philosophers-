@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/04 10:51:32 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/04 15:09:48 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	destroy_all(t_monitor *monitor, int amount,
 // string_utils
 
 long	my_atol(const char *nptr);
+int		is_digit(char *str);
 void	print_message(t_philo *phil, char *action);
 
 // systime

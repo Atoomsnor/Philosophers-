@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 17:18:28 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/04 15:10:41 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,22 @@ long	my_atol(const char *nptr)
 	if (!(nptr[i] == '\0') && !(nptr[i] == ' '))
 		return (0);
 	return (result * parity);
+}
+
+//Sees if the character is numeric
+int	is_digit(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+			i++;
+		else
+			return (0);
+	}
+	return (1);
 }
 
 //Prints given action with time and phil id

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 17:23:19 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/04 15:09:57 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static void	check_input(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
+		if (!is_digit(argv[i]))
+			error_and_exit("Argument error\n", 1);
 		amount = my_atol(argv[i]);
 		if (i == 1 && (amount < 1 || amount > 200))
 			error_and_exit("Argument error\n", 1);
