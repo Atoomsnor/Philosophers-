@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 17:21:32 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/04 10:51:32 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,7 @@ int		main(int argc, char **argv);
 //	*init*	//
 
 void	init_forks(t_monitor *monitor, pthread_mutex_t *fork);
-/** 
- * Sets up the monitor struct with flags and the mutex locks
- * @param monitor struct containing the configuration of the program
- * @param phil array of philosophers
- * @param fork array of mutexes (forks)
- * @param argv program arguments
- * @return never returns
- */
+
 void	init_monitor(t_monitor *monitor, t_philo *phil,
 			pthread_mutex_t *fork, char **argv);
 void	init_philos(t_monitor *monitor, t_philo *phil,

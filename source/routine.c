@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:27:47 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 17:31:11 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/04 10:58:19 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,10 @@ static void	phil_sleeps(t_philo *phil)
 static void	phil_thinks(t_philo *phil)
 {
 	print_message(phil, "is thinking");
+	if (phil->time_to_eat > phil->time_to_sleep)
+		usleep(((phil->time_to_eat - phil->time_to_sleep) + 1) * 1000);
+	else
+		usleep(1000);
 }
 
 //Main routine loop, keeps going untill a death
