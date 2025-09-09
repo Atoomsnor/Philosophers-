@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 17:17:03 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/09 13:20:37 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:25:57 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	error_and_exit(char *error_msg, int exitcode)
 	exit(exitcode);
 }
 
-static void	destroy_locks(t_monitor *monitor,
+void	destroy_locks(t_monitor *monitor,
 			char *error_msg, int exitcode)
 {
 	pthread_mutex_destroy(&monitor->eat_lock);
@@ -59,7 +59,7 @@ void	destroy_forks(t_monitor *monitor, int forks,
 	destroy_locks(monitor, error_msg, exitcode);
 }
 
-void	destroy_all(t_monitor *monitor, int created,
+void	destroy_threads(t_monitor *monitor, int created,
 			char *error_msg, int exitcode)
 {
 	int	i;

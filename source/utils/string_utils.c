@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 11:07:53 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/04 15:10:41 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:35:08 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
-//Ascii to long to transform the input
-long	my_atol(const char *nptr)
+//Ascii to int to transform the input
+int	my_atoi(const char *nptr)
 {
 	long	result;
 	int		parity;
@@ -39,8 +40,10 @@ long	my_atol(const char *nptr)
 		result = result * 10 + (nptr[i] - '0');
 		i++;
 	}
-	if (!(nptr[i] == '\0') && !(nptr[i] == ' '))
-		return (0);
+	if (i > 10)
+		return (-1);
+	if (result > INT_MAX || result < INT_MIN)
+		return (-1);
 	return (result * parity);
 }
 

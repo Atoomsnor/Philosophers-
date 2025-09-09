@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/09 13:25:40 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:32:16 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,24 @@ void	init_monitor(t_monitor *monitor, t_philo *phil,
 {
 	monitor->philos = phil;
 	monitor->forks = fork;
-	monitor->amount = my_atol(argv[1]);
+	monitor->amount = my_atoi(argv[1]);
 	monitor->dead = false;
 	if (pthread_mutex_init(&monitor->eat_lock, NULL) != 0)
-		destroy_all(monitor, 0, "eatlock init error\n", 1);
+		destroy_locks(monitor, "eatlock init error\n", 1);
 	if (pthread_mutex_init(&monitor->dead_lock, NULL) != 0)
-		destroy_all(monitor, 0, "deadlock init error\n", 1);
+		destroy_locks(monitor, "deadlock init error\n", 1);
 	if (pthread_mutex_init(&monitor->print_lock, NULL) != 0)
-		destroy_all(monitor, 0, "printlock init error\n", 1);
+		destroy_locks(monitor, "printlock init error\n", 1);
 }
 
 //Takes the user input to give to every philo struct
 static void	init_input(t_philo *phil, char **argv)
 {
-	phil->time_to_die = my_atol(argv[2]);
-	phil->time_to_eat = my_atol(argv[3]);
-	phil->time_to_sleep = my_atol(argv[4]);
+	phil->time_to_die = my_atoi(argv[2]);
+	phil->time_to_eat = my_atoi(argv[3]);
+	phil->time_to_sleep = my_atoi(argv[4]);
 	if (argv[5])
-		phil->nbr_times_to_eat = my_atol(argv[5]);
+		phil->nbr_times_to_eat = my_atoi(argv[5]);
 	else
 		phil->nbr_times_to_eat = -1;
 }
@@ -95,21 +95,21 @@ void	init_threads(t_monitor *monitor, t_philo *phil)
 	int	i;
 
 	i = 0;
-	if (pthread_create(&monitor->thread, NULL, monitor_routine, monitor) != 1)
-		destroy_all(monitor, 0, "pthread create error\n", 1);
+	if (pthread_create(&monitor->thread, NULL, monitor_routine, monitor) != 0)
+		destroy_threads(monitor, 0, "pthread create error\n", 1);
 	while (i < monitor->amount)
 	{
 		if (pthread_create(&phil[i].thread, NULL, phil_routine, &phil[i]) != 0)
-			destroy_all(monitor, i, "pthread create error\n", 1);
+			destroy_threads(monitor, i - 1, "pthread create error\n", 1);
 		i++;
 	}
 	i = 0;
 	if (pthread_join(monitor->thread, NULL) != 0)
-		destroy_all(monitor, 0, "pthread join error\n", 1);
+		destroy_threads(monitor, 0, "pthread join error\n", 1);
 	while (i < monitor->amount)
 	{
 		if (pthread_join(phil[i].thread, NULL) != 0)
-			destroy_all(monitor, 0, "pthread join error\n", 1);
+			destroy_threads(monitor, 0, "pthread join error\n", 1);
 		i++;
 	}
 }

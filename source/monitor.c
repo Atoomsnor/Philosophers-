@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:27:37 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/09 13:29:45 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:21:20 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	*monitor_routine(void *pointer)
 	t_monitor	*monitor;
 
 	monitor = (t_monitor *)pointer;
+	usleep(1000);
 	while (1)
 	{
 		if (all_eaten_check(monitor->philos) == 1

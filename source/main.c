@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:15:06 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/09 11:27:19 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:35:35 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	check_input(int argc, char **argv)
 	{
 		if (!is_digit(argv[i]))
 			error_and_exit("Argument error\n", 1);
-		amount = my_atol(argv[i]);
+		amount = my_atoi(argv[i]);
 		if (i == 1 && (amount < 1 || amount > 200))
 			error_and_exit("Argument error\n", 1);
 		else if (i == 5 && (amount < 0 || amount > INT_MAX))
@@ -51,5 +51,5 @@ int	main(int argc, char **argv)
 	init_forks(&monitor, fork);
 	init_philos(&monitor, phil, fork, argv);
 	init_threads(&monitor, phil);
-	destroy_all(&monitor, 0, NULL, 0);
+	destroy_forks(&monitor, 0, NULL, 0);
 }

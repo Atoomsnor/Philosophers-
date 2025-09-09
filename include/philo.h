@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/09 13:03:42 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:33:42 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,16 @@ int		if_dead(t_philo *phil);
 // reaper
 
 void	error_and_exit(char *error_msg, int exitcode);
+void	destroy_locks(t_monitor *monitor,
+			char *error_msg, int exitcode);
 void	destroy_forks(t_monitor *monitor, int forks,
 			char *error_msg, int exitcode);
-void	destroy_all(t_monitor *monitor, int created,
+void	destroy_threads(t_monitor *monitor, int created,
 			char *error_msg, int exitcode);
 
 // string_utils
 
-long	my_atol(const char *nptr);
+int		my_atoi(const char *nptr);
 int		is_digit(char *str);
 void	print_message(t_philo *phil, char *action);
 
