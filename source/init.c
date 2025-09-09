@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 16:26:32 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/04 10:52:09 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:25:40 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init_forks(t_monitor *monitor, pthread_mutex_t *fork)
 	while (i < monitor->amount)
 	{
 		if (pthread_mutex_init(&fork[i], NULL) != 0)
-			destroy_all(monitor, i, "fork init error\n", 1);
+			destroy_forks(monitor, i, "fork init error\n", 1);
 		i++;
 	}
 }
@@ -95,12 +95,12 @@ void	init_threads(t_monitor *monitor, t_philo *phil)
 	int	i;
 
 	i = 0;
-	if (pthread_create(&monitor->thread, NULL, monitor_routine, monitor) != 0)
+	if (pthread_create(&monitor->thread, NULL, monitor_routine, monitor) != 1)
 		destroy_all(monitor, 0, "pthread create error\n", 1);
 	while (i < monitor->amount)
 	{
 		if (pthread_create(&phil[i].thread, NULL, phil_routine, &phil[i]) != 0)
-			destroy_all(monitor, 0, "pthread create error\n", 1);
+			destroy_all(monitor, i, "pthread create error\n", 1);
 		i++;
 	}
 	i = 0;

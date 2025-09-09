@@ -6,45 +6,38 @@
 #    By: roversch <roversch@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/13 10:07:28 by roversch          #+#    #+#              #
-#    Updated: 2025/09/03 17:19:01 by roversch         ###   ########.fr        #
+#    Updated: 2025/09/09 12:57:30 by roversch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME 		= philo
 
-SRC		= main.c init.c monitor.c routine.c reaper.c string_utils.c systime.c
-SRC_DIR	= source/ source/utils/
-VPATH	= $(SRC_DIR)
+SRC			= main.c init.c monitor.c routine.c reaper.c string_utils.c systime.c
+SRC_DIR		= source/ source/utils/
+VPATH		= $(SRC_DIR)
 
-DEP_DIR		= dependencies/
-DEPFLAGS	= -MM -MF $@ -MT $@ -MT $(OBJ_DIR)$(addsuffix .o,$(notdir $(basename $<)))
+OBJ_DIR		= objects/
+OBJ			= $(SRC:%.c=$(OBJ_DIR)%.o)
 
-OBJ		= $(SRC:%.c=$(OBJ_DIR)%.o)
-OBJ_DIR	= objects/
+INCLUDES	= include/
 
-INCLUDES = include/
-
-CC = cc
-CFLAGS = -Wall -Wextra -Werror $(addprefix -I,. $(INCLUDES))
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror $(addprefix -I,$(INCLUDES)) -g3
+DEPFLAGS	= -MMD
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) $(CFLAGS) -o $(NAME)
-
-include $(addprefix $(DEP_DIR), $(SRC:%.c=%.d))
+$(NAME): $(OBJ) Makefile
+	$(CC) $(OBJ) $(CFLAGS) -o $(NAME)	
 
 %/:
 	mkdir -p $@
 
-$(DEP_DIR)%.d : %.c | $(DEP_DIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(DEPFLAGS) $<
-
-$(OBJ_DIR)%.o: %.c | $(OBJ_DIR)
-	$(CC) -c $(CFLAGS) $< -o $@
+$(OBJ_DIR)%.o: %.c Makefile | $(OBJ_DIR)
+	$(CC) -c $(CFLAGS) $(DEPFLAGS) $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR) $(DEP_DIR)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
@@ -52,4 +45,6 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-.PRECIOUS : $(OBJ_DIR) $(DEP_DIR)
+.PRECIOUS : $(OBJ_DIR)
+
+-include $(OBJ:.o=.d)	

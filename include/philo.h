@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:31:30 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/04 15:09:48 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:03:42 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ int		if_dead(t_philo *phil);
 // reaper
 
 void	error_and_exit(char *error_msg, int exitcode);
-void	destroy_all(t_monitor *monitor, int amount,
+void	destroy_forks(t_monitor *monitor, int forks,
+			char *error_msg, int exitcode);
+void	destroy_all(t_monitor *monitor, int created,
 			char *error_msg, int exitcode);
 
 // string_utils

@@ -6,7 +6,7 @@
 /*   By: roversch <roversch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 17:17:03 by roversch          #+#    #+#             */
-/*   Updated: 2025/09/03 17:21:45 by roversch         ###   ########.fr       */
+/*   Updated: 2025/09/09 13:20:37 by roversch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 //Prints the error message and exits with the correct code
 void	error_and_exit(char *error_msg, int exitcode)
@@ -23,19 +24,28 @@ void	error_and_exit(char *error_msg, int exitcode)
 	exit(exitcode);
 }
 
+static void	destroy_locks(t_monitor *monitor,
+			char *error_msg, int exitcode)
+{
+	pthread_mutex_destroy(&monitor->eat_lock);
+	pthread_mutex_destroy(&monitor->dead_lock);
+	pthread_mutex_destroy(&monitor->print_lock);
+	error_and_exit(error_msg, exitcode);
+}
+
 //Destroy all locks and all forks
-void	destroy_all(t_monitor *monitor, int amount,
+void	destroy_forks(t_monitor *monitor, int forks,
 			char *error_msg, int exitcode)
 {
 	int	i;
 
 	i = 0;
-	if (amount)
+	if (forks)
 	{
-		while (amount >= 0)
+		while (forks >= 0)
 		{
-			pthread_mutex_destroy(&monitor->forks[amount]);
-			amount--;
+			pthread_mutex_destroy(&monitor->forks[forks]);
+			forks--;
 		}
 	}
 	else
@@ -46,8 +56,26 @@ void	destroy_all(t_monitor *monitor, int amount,
 			i++;
 		}
 	}
-	pthread_mutex_destroy(&monitor->eat_lock);
-	pthread_mutex_destroy(&monitor->dead_lock);
-	pthread_mutex_destroy(&monitor->print_lock);
-	error_and_exit(error_msg, exitcode);
+	destroy_locks(monitor, error_msg, exitcode);
+}
+
+void	destroy_all(t_monitor *monitor, int created,
+			char *error_msg, int exitcode)
+{
+	int	i;
+
+	i = 0;
+	pthread_mutex_lock(&monitor->dead_lock);
+	monitor->dead = true;
+	pthread_mutex_unlock(&monitor->dead_lock);
+	if (created > 0)
+	{
+		while (i <= created)
+		{
+			pthread_join(monitor->philos[i].thread, NULL);
+			i++;
+		}
+		pthread_join(monitor->thread, NULL);
+	}
+	destroy_forks(monitor, 0, error_msg, exitcode);
 }
